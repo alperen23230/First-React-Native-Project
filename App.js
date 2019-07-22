@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { StyleSheet, View, TextInput, Button } from 'react-native';
 
 import PlaceList from './src/components/PlaceList/PlaceList';
+import PlaceDetail from './src/components/PlaceDetail/PlaceDetail';
 
 export default class App extends Component {
   state = {
     placeName: "",
-    places: []
+    places: [],
+    selectedPlace: null
   };
 
 
@@ -14,24 +16,47 @@ export default class App extends Component {
   placeAddedHandler = placeName => {
     this.setState(prevState => {
       return {
-        places: prevState.places.concat({ key: Math.random(), name: placeName, image: {uri: "https://blog.hotelscombined.com/wp-content/uploads/2017/08/Battery-Spencer.jpg?x79158"} })
+        places: prevState.places.concat({ key: Math.random(), name: placeName, image: { uri: "https://blog.hotelscombined.com/wp-content/uploads/2017/08/Battery-Spencer.jpg?x79158" } })
       }
     });
   };
 
-  placeDeleteHandler = id => {
+  placeSelectedHandler = id => {
+
     this.setState(prevState => {
       return {
-        places: prevState.places.filter(place => {
-          return place.key !== id;
+        selectedPlace: prevState.places.find(place => {
+          return place.key === id;
         })
-      }
+      };
     });
   };
+
+  placeDeleteHandler = () => {
+      this.setState(prevState => {
+        return {
+          places: prevState.places.filter(place => {
+            return place.key !== prevState.selectedPlace.key;
+          }),
+          selectedPlace: null
+        }
+      });
+  }
+
+  modalCloseHandler = () => {
+    this.setState({
+      selectedPlace: null
+    });
+  }
+
 
   render() {
     return (
       <View style={styles.container}>
+        <PlaceDetail 
+        selectedPlace={this.state.selectedPlace} 
+        onItemDeleted={this.placeDeleteHandler} 
+        onModalClosed={this.modalCloseHandler} />
         <View style={styles.inputContainer}>
           <TextInput
             onChangeText={(text) => { this.setState({ placeName: text }) }}
@@ -42,7 +67,7 @@ export default class App extends Component {
             style={styles.button}
             onPress={() => this.placeAddedHandler(this.state.placeName)} />
         </View>
-        <PlaceList places={this.state.places} onItemPressed={this.placeDeleteHandler} />
+        <PlaceList places={this.state.places} onItemPressed={this.placeSelectedHandler} />
       </View>
     );
   }
