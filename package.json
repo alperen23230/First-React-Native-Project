@@ -10,7 +10,8 @@
     "react-dom": "^16.8.6",
     "react-native": "0.59.8",
     "react-native-web": "^0.11.4",
-    "react-redux": "^7.1.0"
+    "react-redux": "^7.1.0",
+    "redux": "^4.0.4"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.1.1"

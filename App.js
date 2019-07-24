@@ -1,73 +1,52 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, TextInput, Button } from 'react-native';
+import { connect } from 'react-redux';
+import { addPlace, deletePlace, selectPlace, deselectPlace, changeName } from './src/store/actions/index'
 
 import PlaceList from './src/components/PlaceList/PlaceList';
 import PlaceDetail from './src/components/PlaceDetail/PlaceDetail';
 
-export default class App extends Component {
-  state = {
-    placeName: "",
-    places: [],
-    selectedPlace: null
-  };
-
-
+class App extends Component {
 
   placeAddedHandler = placeName => {
-    this.setState(prevState => {
-      return {
-        places: prevState.places.concat({ key: Math.random(), name: placeName, image: { uri: "https://blog.hotelscombined.com/wp-content/uploads/2017/08/Battery-Spencer.jpg?x79158" } })
-      }
-    });
+    this.props.onAddPlace(placeName);
   };
 
   placeSelectedHandler = id => {
-
-    this.setState(prevState => {
-      return {
-        selectedPlace: prevState.places.find(place => {
-          return place.key === id;
-        })
-      };
-    });
+    this.props.onSelectPlace(id);
   };
 
   placeDeleteHandler = () => {
-      this.setState(prevState => {
-        return {
-          places: prevState.places.filter(place => {
-            return place.key !== prevState.selectedPlace.key;
-          }),
-          selectedPlace: null
-        }
-      });
+    this.props.onDeletePlace();
   }
 
   modalCloseHandler = () => {
-    this.setState({
-      selectedPlace: null
-    });
+    this.props.onDeSelectPlace();
   }
+
+  nameChangeHandler = (text) => {
+    this.props.onChangeName(text);
+  } 
 
 
   render() {
     return (
       <View style={styles.container}>
         <PlaceDetail 
-        selectedPlace={this.state.selectedPlace} 
+        selectedPlace={this.props.selectedPlace} 
         onItemDeleted={this.placeDeleteHandler} 
         onModalClosed={this.modalCloseHandler} />
         <View style={styles.inputContainer}>
           <TextInput
-            onChangeText={(text) => { this.setState({ placeName: text }) }}
-            value={this.state.placeName}
+            onChangeText={this.nameChangeHandler}
+            value={this.props.placeName}
             placeholder="Nice Text Input"
             style={styles.input} />
           <Button title="Add"
             style={styles.button}
-            onPress={() => this.placeAddedHandler(this.state.placeName)} />
+            onPress={() => this.placeAddedHandler(this.props.placeName)} />
         </View>
-        <PlaceList places={this.state.places} onItemPressed={this.placeSelectedHandler} />
+        <PlaceList places={this.props.places} onItemPressed={this.placeSelectedHandler} />
       </View>
     );
   }
@@ -94,3 +73,23 @@ const styles = StyleSheet.create({
     width: "30%"
   }
 });
+
+const mapStateToProps = state => {
+  return { 
+    placeName: state.places.placeName,
+    places: state.places.places,
+    selectedPlace: state.places.selectedPlace
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {  
+    onAddPlace: (name) => dispatch(addPlace(name)),
+    onDeletePlace: () => dispatch(deletePlace()),
+    onSelectPlace: (id) => dispatch(selectPlace(id)),
+    onDeSelectPlace: () => dispatch(deselectPlace()), 
+    onChangeName: (text) => dispatch(changeName(text))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

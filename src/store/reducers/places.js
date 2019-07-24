@@ -1,4 +1,4 @@
-import { ADD_PLACE, DELETE_PLACE, SELECT_PLACE, DESELECT_PLACE } from '../actions/actionTypes'
+import { ADD_PLACE, DELETE_PLACE, SELECT_PLACE, DESELECT_PLACE, CHANGE_NAME } from '../actions/actionTypes'
 
 
 const initialState = {
@@ -37,7 +37,12 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 selectedPlace: null
-            };        
+            }; 
+        case CHANGE_NAME:
+            return {
+                ...state,
+                placeName: action.placeName
+            };       
         default:
             return state;
     }
