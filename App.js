@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TextInput, Button } from 'react-native';
+import { StyleSheet, View, TextInput, Button, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { addPlace, deletePlace, selectPlace, deselectPlace, changeName } from './src/store/actions/index'
 
@@ -18,15 +18,15 @@ class App extends Component {
 
   placeDeleteHandler = () => {
     this.props.onDeletePlace();
-  }
+  };
 
   modalCloseHandler = () => {
     this.props.onDeSelectPlace();
-  }
+  };
 
   nameChangeHandler = (text) => {
     this.props.onChangeName(text);
-  } 
+  };
 
 
   render() {
@@ -64,7 +64,8 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: Platform.OS === 'ios' ? 30 : 0 
   },
   input: {
     width: "70%"
