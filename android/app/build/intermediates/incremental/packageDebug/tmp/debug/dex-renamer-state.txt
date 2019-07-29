@@ -1,4 +1,4 @@
-#Thu Jul 11 21:05:35 EET 2019
+#Sat Jul 27 13:35:33 EET 2019
 base.0=C\:\\Users\\alper\\Desktop\\React Projects\\first-native-app\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 path.0=classes.dex
 renamed.0=classes.dex
